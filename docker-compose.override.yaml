@@ -1,0 +1,21 @@
+services:
+  # The Database Service
+  db:
+    image: apache/age:latest
+    container_name: robotics_db
+    network_mode: host
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=semantic_map
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d semantic_map"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Patch the existing 'base' service from your repo to recognize the DB
+  base:
+    environment:
+      - DATABASE_URL=postgres://postgres@localhost:5432/semantic_map
+      - PGHOST=localhost
