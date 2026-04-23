@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  semantic-graph:
+    image: postgres:16
+    container_name: semantic_maze_graph
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: semantic_graph
+      POSTGRES_USER: robot
+      POSTGRES_PASSWORD: robotpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - semantic_pgdata:/var/lib/postgresql/data
+      - ./schema/init_schema.sql:/docker-entrypoint-initdb.d/01-init_schema.sql:ro
+    command: >
+      postgres 
+      -c shared_preload_libraries=age 
+      -c max_connections=200
+      -c work_mem=64MB
+    networks:
+      - turtlebot-net
+
+    # Health check to ensure AGE and pgvector are ready
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U robot && psql -U robot -d semantic_graph -c 'SELECT 1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  semantic_pgdata:
+
+networks:
+  turtlebot-net:
+    driver: bridge
+    external: true
