@@ -1,0 +1,46 @@
+%YAML:1.0
+
+# Camera Calibration for Task 2 - Indoor House Walking Video
+# Based on Camera Calibration Lecture (aegean.ai)
+
+Camera:
+  name: "Phone Camera - Indoor Walking"
+  setup: "monocular"
+  model: "perspective"
+  
+  # Intrinsic parameters (approximated for 3840x2160 phone video)
+  fx: 2800.0      # focal length x
+  fy: 2800.0      # focal length y  
+  cx: 1920.0      # principal point x (center)
+  cy: 1080.0      # principal point y (center)
+
+  # Distortion coefficients (typical for phone lenses)
+  k1: -0.15
+  k2: 0.05
+  p1: 0.0
+  p2: 0.0
+  k3: 0.0
+
+  # Video properties
+  fps: 30.0
+  cols: 3840
+  rows: 2160
+  color_order: "BGR"
+
+# Preprocessing
+Preprocessing:
+  min_size: 800
+
+# Feature extraction (for ORB)
+Feature:
+  name: "ORB settings for indoor video"
+  scale_factor: 1.2
+  num_levels: 8
+  ini_fast_threshold: 20
+  min_fast_threshold: 7
+
+# For documentation only
+Note: |
+  This is an approximate calibration for a smartphone camera.
+  In a real project you would use the Camera Calibration lecture method 
+  (chessboard + OpenCV calibrateCamera) to get accurate values.
